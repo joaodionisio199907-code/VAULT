@@ -40,6 +40,37 @@
     </style>
 </head>
 <body>
+    <div id="loading-screen" class="fixed inset-0 z-[999] bg-[#050505] flex flex-col items-center justify-center transition-opacity duration-700">
+    
+    <div class="relative w-32 h-32 flex items-center justify-center mb-6">
+        <img id="loader-logo" 
+             src="VAULT.png" 
+             alt="VAULT Logo" 
+             class="w-24 h-24 object-contain animate-pulse-fast drop-shadow-[0_0_15px_rgba(118,255,3,0.7)]">
+    </div>
+
+    <h1 class="text-white font-black text-4xl tracking-[0.3em] mb-4">VAULT<span class="text-[#76ff03]">.</span></h1>
+    <p class="text-gray-500 text-sm uppercase tracking-widest mb-8">Initializing Game Systems...</p>
+
+    <div class="w-80 h-3 bg-gray-800 rounded-full overflow-hidden border border-gray-700">
+        <div id="progress-bar" 
+             class="h-full bg-gradient-to-r from-cyan-400 to-[#76ff03] w-0 transition-all duration-300 ease-out">
+        </div>
+    </div>
+    <span id="progress-text" class="text-xs text-gray-400 mt-2">0%</span>
+
+</div>
+
+<style>
+    /* ... tus estilos anteriores ... */
+    @keyframes pulse-fast {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .animate-pulse-fast {
+        animation: pulse-fast 1.5s infinite ease-in-out;
+    }
+</style>
 
 <nav class="fixed top-0 w-full z-[100] glass px-8 py-4">
     <div class="max-w-[1440px] mx-auto flex items-center justify-between">
@@ -417,62 +448,62 @@ This game is ideal for fans of horror and puzzle experiences. It has been design
     </footer>
 
     <script>
-        lucide.createIcons();
+    // --- Lógica de idiomas ---
+    const translations = {
+        en: { /* ... tus traducciones en inglés ... */ },
+        es: { /* ... tus traducciones en español ... */ }
+    };
 
-        // FUNCIONES MODAL
-        function openGameModal(gameId) {
-            document.getElementById('game-modal').classList.add('active');
-            document.body.classList.add('no-scroll');
+    function changeLanguage(lang) {
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            if(translations[lang][key]) el.innerText = translations[lang][key];
+        });
+        document.querySelectorAll('[data-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-placeholder');
+            if(translations[lang][key]) el.placeholder = translations[lang][key];
+        });
+        document.querySelectorAll('.current-lang').forEach(el => el.innerText = lang.toUpperCase());
+        document.querySelectorAll('.lang-dropdown').forEach(el => el.classList.remove('active'));
+    }
+
+    function toggleLang(id) {
+        document.getElementById(id).classList.toggle('active');
+    }
+
+    // --- Variables del Loader Gaming ---
+    const loader = document.getElementById('loading-screen');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const loaderLogo = document.getElementById('loader-logo');
+    let loadedAssets = 0;
+    const totalAssets = 3; 
+
+    function updateProgress() {
+        loadedAssets++;
+        const progress = Math.min((loadedAssets / totalAssets) * 100, 100);
+        if(progressBar) progressBar.style.width = progress + '%';
+        if(progressText) progressText.innerText = Math.round(progress) + '%';
+
+        if (loadedAssets >= totalAssets) {
+            setTimeout(() => {
+                loader.classList.add('opacity-0');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    startHeroSlider(); // Iniciamos el slider solo cuando el loader se va
+                }, 700);
+            }, 500);
         }
+    }
 
-        function closeModal() {
-            document.getElementById('game-modal').classList.remove('active');
-            document.body.classList.remove('no-scroll');
-        }
+    // --- Hero Slider ---
+    const slides = [
+        { img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600", title: "Shadow Realm<br>Chronicles", desc: "Darkness Falls" },
+        { img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600", title: "Cyberpunk<br>Overdrive", desc: "Future is now" }
+    ];
+    let currentSlide = 0;
 
-        // Lógica de idiomas existente
-        const translations = {
-            en: {
-                "nav-store": "Store", "nav-library": "Library", "nav-community": "Community", "nav-news": "News", "nav-offers": "● Special Offers",
-                "search-placeholder": "Search games, tags, publishers...", "btn-signin": "Sign In", "reviews": "(125K reviews)", "btn-buy": "Buy Now",
-                "cat-title": "Browse by Category", "cat-subtitle": "Explore our vast collection of games across all genres",
-                "news-title": "Latest News", "news-btn": "View All News", "loop-title": "Stay in the loop", "loop-subtitle": "Get the latest deals, news and updates delivered to your inbox", "loop-btn": "Subscribe",
-                "footer-desc": "Your ultimate destination for PC gaming. Discover, play, and connect with millions of gamers worldwide.",
-                "f-col1-t": "About VAULT", "f-col2-t": "Support", "f-col3-t": "Legal", "f-col4-t": "Developers"
-            },
-            es: {
-                "nav-store": "Tienda", "nav-library": "Biblioteca", "nav-community": "Comunidad", "nav-news": "Noticias", "nav-offers": "● Ofertas Especiales",
-                "search-placeholder": "Buscar juegos, etiquetas...", "btn-signin": "Iniciar Sesión", "reviews": "(125K reseñas)", "btn-buy": "Comprar ahora",
-                "cat-title": "Explorar por Categoría", "cat-subtitle": "Explora nuestra vasta colección de juegos de todos los géneros",
-                "news-title": "Últimas Noticias", "news-btn": "Ver Todo", "loop-title": "Mantente informado", "loop-subtitle": "Recibe las mejores ofertas y noticias en tu bandeja de entrada", "loop-btn": "Suscribirse",
-                "footer-desc": "Tu destino definitivo para juegos de PC. Descubre, juega y conecta con millones de jugadores.",
-                "f-col1-t": "Sobre VAULT", "f-col2-t": "Soporte", "f-col3-t": "Legal", "f-col4-t": "Desarrolladores"
-            }
-        };
-
-        function changeLanguage(lang) {
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if(translations[lang][key]) el.innerText = translations[lang][key];
-            });
-            document.querySelectorAll('[data-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-placeholder');
-                if(translations[lang][key]) el.placeholder = translations[lang][key];
-            });
-            document.querySelectorAll('.current-lang').forEach(el => el.innerText = lang.toUpperCase());
-            document.querySelectorAll('.lang-dropdown').forEach(el => el.classList.remove('active'));
-        }
-
-        function toggleLang(id) {
-            document.getElementById(id).classList.toggle('active');
-        }
-
-        // Hero Slider
-        const slides = [
-            { img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600", title: "Shadow Realm<br>Chronicles", desc: "Darkness Falls" },
-            { img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600", title: "Cyberpunk<br>Overdrive", desc: "Future is now" }
-        ];
-        let currentSlide = 0;
+    function startHeroSlider() {
         setInterval(() => {
             currentSlide = (currentSlide + 1) % slides.length;
             const imgEl = document.getElementById('hero-img');
@@ -486,19 +517,30 @@ This game is ideal for fans of horror and puzzle experiences. It has been design
                 }, 700);
             }
         }, 5000);
+    }
 
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                if (elementTop < windowHeight - 100) {
-                    reveals[i].classList.add("active");
-                }
+    // --- Revelado al hacer Scroll ---
+    function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+            var windowHeight = window.innerHeight;
+            var elementTop = reveals[i].getBoundingClientRect().top;
+            if (elementTop < windowHeight - 100) {
+                reveals[i].classList.add("active");
             }
         }
-        window.addEventListener("scroll", reveal);
-        reveal();
-    </script>
+    }
+
+    // --- Listeners de Carga ---
+    if(loaderLogo) {
+        loaderLogo.onload = updateProgress;
+        loaderLogo.onerror = updateProgress;
+    }
+    document.addEventListener('DOMContentLoaded', updateProgress);
+    window.addEventListener('load', updateProgress);
+    window.addEventListener("scroll", reveal);
+    
+    reveal(); // Ejecutar una vez al inicio
+</script>
 </body>
 </html>
