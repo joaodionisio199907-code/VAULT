@@ -9,40 +9,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        
         body {
             font-family: 'Inter', sans-serif;
             background-color: #050505;
             color: white;
             overflow-x: hidden;
         }
-
         :root {
             --v-green: #76ff03;
             --v-cyan: #00e5ff;
             --v-dark: #0d0d0d;
         }
-
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-
         .glass { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .card-v { background: #0d0d0d; border: 1px solid #1a1a1a; transition: all 0.3s ease; }
         .card-v:hover { border-color: var(--v-green); transform: translateY(-5px); }
-
         .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
         .category-icon { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .cat-item:hover .category-icon { transform: scale(1.2) rotate(8deg); }
-
         .btn-buy { background: var(--v-cyan); color: black; font-weight: 800; border-radius: 12px; transition: 0.3s; }
         .btn-buy:hover { background: white; transform: scale(1.05); }
-
         .lang-dropdown { display: none; }
         .lang-dropdown.active { display: block; animation: fadeIn 0.2s ease-out; }
-
-        /* Estilos nuevos para el Modal y Carrusel */
         #game-modal { display: none; }
         #game-modal.active { display: flex; animation: fadeIn 0.3s ease; }
         .no-scroll { overflow: hidden; }
@@ -51,24 +41,30 @@
 </head>
 <body>
 
- <nav class="fixed top-0 w-full z-[100] glass px-8 py-4">
-        <div class="max-w-[1440px] mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-10">
-                <div class="flex items-center gap-2 cursor-pointer group">
-                    <div class="bg-[#76ff03] p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
-                        <i data-lucide="shield" class="text-black w-6 h-6"></i>
-                    </div>
-                    <span class="text-2xl font-black italic tracking-tighter uppercase">VAULT</span>
-                </div>
-                <div class="hidden lg:flex gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                    <a href="#" class="text-white border-b-2 border-[#76ff03] pb-1" data-key="nav-store">Store</a>
-                    <a href="#" class="hover:text-white transition" data-key="nav-library">Library</a>
-                    <a href="#" class="hover:text-white transition" data-key="nav-community">Community</a>
-                    <a href="#" class="hover:text-white transition" data-key="nav-news">News</a>
-                    <a href="#" class="text-[#76ff03] animate-pulse" data-key="nav-offers">● Special Offers</a>
-                </div>
+<nav class="fixed top-0 w-full z-[100] glass px-8 py-4">
+    <div class="max-w-[1440px] mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-10">
+
+            <!-- LOGO PERSONALIZADO -->
+            <div class="flex items-center gap-3 cursor-pointer group">
+                <img 
+                    src="logo.png"
+                    alt="VAULT Logo"
+                    class="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+                >
+                <span class="text-2xl font-black italic tracking-tighter uppercase">VAULT</span>
             </div>
-            <div class="flex-1 max-w-xl px-10">
+
+            <div class="hidden lg:flex gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <a href="#" class="text-white border-b-2 border-[#76ff03] pb-1" data-key="nav-store">Store</a>
+                <a href="#" class="hover:text-white transition" data-key="nav-library">Library</a>
+                <a href="#" class="hover:text-white transition" data-key="nav-community">Community</a>
+                <a href="#" class="hover:text-white transition" data-key="nav-news">News</a>
+                <a href="#" class="text-[#76ff03] animate-pulse" data-key="nav-offers">● Special Offers</a>
+            </div>
+        </div>
+        <!-- RESTO DEL CÓDIGO EXACTAMENTE IGUAL -->
+<div class="flex-1 max-w-xl px-10">
                 <div class="relative">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
                     <input type="text" data-placeholder="search-placeholder" placeholder="Search games, tags, publishers..." class="w-full bg-white/5 border border-white/10 rounded-full py-2.5 pl-12 pr-4 text-xs focus:border-[#76ff03]/50 outline-none">
