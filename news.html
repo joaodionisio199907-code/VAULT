@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAULT | Neural Intelligence Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --neon: #76ff03;
+            --bg: #050505;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: #fff; 
+            overflow-x: hidden; 
+            background-image: radial-gradient(circle at 50% 50%, #111 0%, #050505 100%);
+        }
+
+        .font-title { font-family: 'Syncopate', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Efecto de Escaneo en Imágenes */
+        .scan-line {
+            position: relative;
+            overflow: hidden;
+        }
+        .scan-line::after {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, transparent, rgba(118,255,3,0.2), transparent);
+            animation: scan 3s infinite;
+        }
+        @keyframes scan {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        .vault-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .vault-card:hover {
+            background: rgba(118,255,3,0.05);
+            border-color: var(--neon);
+            box-shadow: 0 0 40px rgba(118,255,3,0.1);
+        }
+
+        /* Ticker Ultra Estilizado */
+        .ticker-wrap {
+            background: var(--neon);
+            color: #000;
+            font-family: 'JetBrains Mono';
+            padding: 4px 0;
+            transform: rotate(-1deg) translateY(-10px);
+            width: 110%;
+            margin-left: -5%;
+            z-index: 100;
+        }
+
+        /* Custom Input */
+        .admin-input {
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            color: var(--neon);
+            font-family: 'JetBrains Mono';
+            outline: none;
+        }
+        .admin-input:focus { border-color: var(--neon); }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="fixed top-0 w-full z-[150] bg-black/80 backdrop-blur-xl border-b border-white/10 px-10 py-5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-[#76ff03] flex items-center justify-center rounded-lg rotate-12">
+                    <i data-lucide="shield-check" class="text-black w-6 h-6"></i>
+                </div>
+                <h1 class="font-title text-xl tracking-[0.2em]">VAULT<span class="text-[#76ff03]">.NEWS</span></h1>
+            </div>
+            <div class="flex items-center gap-8">
+                <div class="hidden md:flex flex-col items-end">
+                    <span class="text-[10px] text-gray-500 font-mono uppercase tracking-widest">System Status</span>
+                    <span class="text-[10px] text-[#76ff03] font-mono uppercase tracking-widest">Fully Operational</span>
+                </div>
+                <button onclick="toggleAdmin()" class="p-2 hover:bg-white/10 rounded-full transition">
+                    <i data-lucide="terminal" class="w-5 h-5 text-gray-400"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mt-24 ticker-wrap">
+        <marquee scrollamount="12" class="font-bold uppercase text-[11px] tracking-tighter">
+            +++ UPLOAD DETECTED +++ NEURAL LINK STABLE +++ SECURITY CLEARANCE: LEVEL 5 +++ NO EXTERNAL REQUESTS BLOCKED +++ DATABASE REFRESHED +++
+        </marquee>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-10 mt-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            
+            <div class="lg:col-span-8">
+                <div id="featured-slot"></div>
+                <div id="grid-slot" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10"></div>
+            </div>
+
+            <div class="lg:col-span-4">
+                <div class="vault-card rounded-3xl p-8 sticky top-32">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="font-title text-[10px] tracking-widest text-gray-400">QUICK_BRIEFINGS</h2>
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+                    </div>
+                    <div id="briefing-slot" class="space-y-6"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="admin-modal" class="fixed inset-0 bg-black/95 z-[200] hidden flex items-center justify-center p-6 backdrop-blur-md">
+        <div class="bg-[#0a0a0a] border border-[#76ff03]/30 p-10 rounded-[2.5rem] max-w-lg w-full shadow-2xl">
+            <h3 class="font-title text-[#76ff03] mb-6 tracking-widest">CMD://NEW_INTEL</h3>
+            <div class="space-y-4">
+                <input id="title" placeholder="TÍTULO DE LA NOTICIA" class="admin-input">
+                <input id="image" placeholder="URL DE IMAGEN (UNSPLASH/IGN)" class="admin-input">
+                <input id="url" placeholder="URL DE LA FUENTE" class="admin-input">
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <button onclick="saveNews()" class="bg-[#76ff03] text-black font-bold p-4 rounded-xl hover:scale-105 transition">EJECUTAR</button>
+                    <button onclick="clearAll()" class="border border-red-500 text-red-500 font-bold p-4 rounded-xl hover:bg-red-500/10 transition">BORRAR BD</button>
+                </div>
+                <button onclick="toggleAdmin()" class="w-full text-gray-600 text-[10px] font-mono uppercase mt-4">Cerrar Terminal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_INTEL = [
+            {
+                title: "Grand Theft Auto VI: Nuevo trailer filtrado para Marzo",
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070",
+                url: "https://ign.com",
+                type: "FEATURED"
+            },
+            {
+                title: "PlayStation 6: Sony registra patentes de retrocompatibilidad total",
+                image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=2070",
+                url: "https://ign.com",
+                type: "NORMAL"
+            },
+            {
+                title: "NVIDIA RTX 5090 rompe los récords de temperatura y potencia",
+                image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?q=80&w=2070",
+                url: "https://ign.com",
+                type: "NORMAL"
+            }
+        ];
+
+        function loadInterface() {
+            const data = JSON.parse(localStorage.getItem('vault_intel')) || DEFAULT_INTEL;
+            
+            // 1. Render Featured
+            document.getElementById('featured-slot').innerHTML = `
+                <div onclick="window.open('${data[0].url}')" class="vault-card rounded-[3rem] overflow-hidden group cursor-pointer relative h-[500px]">
+                    <div class="scan-line h-full w-full">
+                        <img src="${data[0].image}" class="w-full h-full object-cover opacity-50 group-hover:scale-110 transition duration-1000">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-12 flex flex-col justify-end">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="h-px w-8 bg-[#76ff03]"></span>
+                            <span class="text-[#76ff03] font-mono text-xs font-bold tracking-[0.3em]">PRIORITY_ONE</span>
+                        </div>
+                        <h2 class="font-title text-4xl md:text-6xl leading-tight">${data[0].title}</h2>
+                    </div>
+                </div>
+            `;
+
+            // 2. Render Grid
+            document.getElementById('grid-slot').innerHTML = data.slice(1, 3).map(n => `
+                <div onclick="window.open('${n.url}')" class="vault-card rounded-[2rem] p-4 group cursor-pointer">
+                    <div class="rounded-[1.5rem] overflow-hidden h-48 mb-6">
+                        <img src="${n.image}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    </div>
+                    <h3 class="font-title text-sm leading-relaxed px-2 mb-4">${n.title}</h3>
+                </div>
+            `).join('');
+
+            // 3. Render Briefings (Lateral)
+            document.getElementById('briefing-slot').innerHTML = data.slice(0, 5).map(n => `
+                <div onclick="window.open('${n.url}')" class="group cursor-pointer border-b border-white/5 pb-4 hover:border-[#76ff03]/50 transition">
+                    <p class="text-[10px] font-mono text-[#76ff03] mb-1">DATA_STREAM_${Math.floor(Math.random()*999)}</p>
+                    <h4 class="text-xs font-bold text-gray-400 group-hover:text-white transition uppercase tracking-wider">${n.title}</h4>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function toggleAdmin() {
+            const m = document.getElementById('admin-modal');
+            m.classList.toggle('hidden');
+        }
+
+        function saveNews() {
+            const title = document.getElementById('title').value;
+            const image = document.getElementById('image').value;
+            const url = document.getElementById('url').value;
+            
+            if(!title) return alert("Error: Título requerido");
+
+            const newItem = { title, image, url };
+            let current = JSON.parse(localStorage.getItem('vault_intel')) || DEFAULT_INTEL;
+            current.unshift(newItem);
+            localStorage.setItem('vault_intel', JSON.stringify(current));
+            location.reload();
+        }
+
+        function clearAll() {
+            localStorage.removeItem('vault_intel');
+            location.reload();
+        }
+
+        window.onload = loadInterface;
+    </script>
+</body>
+</html>
