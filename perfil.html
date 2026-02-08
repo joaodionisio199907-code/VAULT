@@ -16,17 +16,17 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
         
-        /* Form Styles */
+        /* Estilos de Formulario */
         input, textarea { background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; transition: 0.3s !important; }
         input:focus, textarea:focus { border-color: #76ff03 !important; outline: none; box-shadow: 0 0 15px rgba(118,255,3,0.1); }
 
         .stat-card { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .stat-card:hover { border-color: #76ff03; background: #111; }
 
-        .tab-btn.active { background: #76ff03; color: black; }
+        .tab-btn.active { background: #76ff03 !important; color: black !important; }
         .hidden { display: none; }
         
-        /* Custom Scrollbar */
+        /* Scrollbar personalizada */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
@@ -36,7 +36,9 @@
 <nav class="fixed top-0 w-full z-[100] glass px-8 py-4">
     <div class="max-w-[1440px] mx-auto flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2 group">
-            <div class="bg-[#76ff03] p-1.5 rounded-lg group-hover:rotate-12 transition-transform"><i data-lucide="shield" class="text-black w-6 h-6"></i></div>
+            <div class="bg-[#76ff03] p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
+                <i data-lucide="shield" class="text-black w-6 h-6"></i>
+            </div>
             <span class="text-2xl font-black italic tracking-tighter uppercase">VAULT</span>
         </a>
         <div class="flex items-center gap-6">
@@ -59,7 +61,7 @@
         </div>
         <div class="text-center md:text-left">
             <div class="flex flex-col md:flex-row items-center gap-4 mb-3">
-                <h1 id="display-name" class="text-5xl font-black uppercase italic tracking-tighter">USER_NAME</h1>
+                <h1 id="display-name" class="text-5xl font-black uppercase italic tracking-tighter">CARGANDO...</h1>
                 <span class="bg-[#76ff03]/10 text-[#76ff03] text-[10px] font-black px-4 py-1 rounded-full border border-[#76ff03]/20 uppercase">Vault Member</span>
             </div>
             <p id="display-email" class="text-gray-500 font-medium mb-8 italic opacity-70">email@example.com</p>
@@ -82,7 +84,7 @@
             <div class="stat-card p-8 rounded-[2.5rem]">
                 <i data-lucide="star" class="text-yellow-400 w-6 h-6 mb-4"></i>
                 <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Community Rank</h3>
-                <p class="text-4xl font-black mt-1 italic text-gradient">ELITE</p>
+                <p class="text-4xl font-black mt-1 italic text-white">ELITE</p>
             </div>
             <div class="stat-card p-8 rounded-[2.5rem]">
                 <i data-lucide="zap" class="text-[#00e5ff] w-6 h-6 mb-4"></i>
@@ -92,8 +94,9 @@
         </section>
 
         <h2 class="text-2xl font-black uppercase italic mb-8 flex items-center gap-3">
-            <span class="w-8 h-1 bg-[#76ff03]"></span> Published by me
+            <span class="w-8 h-1 bg-[#76ff03]"></span> My Published Games
         </h2>
+        
         <div id="my-games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="col-span-full py-20 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
                 <p class="text-gray-600 italic">No games found in your vault...</p>
@@ -142,7 +145,9 @@
                         </div>
                     </div>
 
-                    <button onclick="handlePublish()" class="md:col-span-2 bg-[#76ff03] text-black font-black py-6 rounded-2xl uppercase text-xs tracking-[5px] hover:scale-[1.01] active:scale-95 transition shadow-2xl shadow-[#76ff03]/20">Upload to the Vault</button>
+                    <button onclick="handlePublish()" class="md:col-span-2 bg-[#76ff03] text-black font-black py-6 rounded-2xl uppercase text-xs tracking-[5px] hover:scale-[1.01] active:scale-95 transition shadow-2xl shadow-[#76ff03]/20">
+                        Upload to the Vault
+                    </button>
                 </div>
             </div>
         </section>
