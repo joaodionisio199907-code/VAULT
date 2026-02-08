@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAULT | CommunityShop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; }
+        .vault-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .vault-card:hover { border-color: #76ff03; transform: translateY(-10px); background: rgba(118, 255, 3, 0.02); }
+        .vault-gradient { background: linear-gradient(180deg, rgba(118,255,3,0.1) 0%, rgba(0,0,0,0) 100%); }
+    </style>
+</head>
+<body class="pt-24">
+
+    <nav class="fixed top-0 w-full bg-black/90 backdrop-blur-xl z-50 p-6 border-b border-white/5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter text-[#76ff03]">VAULT</a>
+            <div class="flex items-center gap-10">
+                <div class="hidden md:flex gap-8 text-[10px] font-black uppercase tracking-[3px]">
+                    <a href="index.html" class="text-gray-500 hover:text-white">Store</a>
+                    <a href="community.html" class="text-white border-b-2 border-[#76ff03] pb-1">Community</a>
+                    <a href="perfil.html" class="text-gray-500 hover:text-white">Studio</a>
+                </div>
+                <button class="bg-[#76ff03] text-black p-2 rounded-lg"><i data-lucide="user" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6">
+        <header class="relative py-20 overflow-hidden rounded-[4rem] mb-12 bg-zinc-900/20 border border-white/5 px-12">
+            <div class="absolute top-0 right-0 w-1/2 h-full vault-gradient opacity-20 pointer-events-none"></div>
+            <div class="relative z-10">
+                <span class="text-[#76ff03] font-black text-[10px] tracking-[5px] uppercase mb-4 block">The Workshop</span>
+                <h1 class="text-7xl font-black uppercase italic tracking-tighter mb-6 leading-none">Community<br><span class="text-zinc-700">Shop</span></h1>
+                <p class="max-w-md text-gray-500 italic text-sm leading-relaxed">Explora las creaciones verificadas de la comunidad. Desde mods experimentales hasta títulos indie completos.</p>
+            </div>
+        </header>
+
+        <section class="flex flex-col md:flex-row gap-6 mb-16 items-center justify-between">
+            <div class="flex gap-3 overflow-x-auto w-full md:w-auto pb-4 md:pb-0">
+                <button class="bg-[#76ff03] text-black px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest">All</button>
+                <button class="bg-white/5 hover:bg-white/10 px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 transition">Games</button>
+                <button class="bg-white/5 hover:bg-white/10 px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 transition">Mods</button>
+                <button class="bg-white/5 hover:bg-white/10 px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/5 transition">Assets</button>
+            </div>
+            
+            <div class="relative w-full md:w-96">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                <input type="text" placeholder="SEARCH CREATIONS..." class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-[10px] font-bold uppercase tracking-widest focus:border-[#76ff03] outline-none transition">
+            </div>
+        </section>
+
+        <div id="community-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 pb-32">
+            </div>
+    </main>
+
+    <script src="community.js"></script>
+</body>
+</html>
