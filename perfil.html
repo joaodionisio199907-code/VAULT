@@ -3,92 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAULT | Studio & Distribution</title>
+    <title>VAULT | Studio Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; }
         .tab-content.hidden { display: none; }
         .active-tab { background-color: #76ff03 !important; color: black !important; }
-        input, textarea { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        .glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        input, textarea { background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
         input:focus, textarea:focus { border-color: #76ff03 !important; outline: none; }
-        .glass { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="pt-24">
+<body class="pt-28">
 
-    <nav class="fixed top-0 w-full glass z-50 p-5 border-b border-white/5">
+    <nav class="fixed top-0 w-full glass z-50 p-6">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-black italic tracking-tighter flex items-center gap-2">
-                <div class="bg-[#76ff03] p-1 rounded-md"><i data-lucide="shield" class="text-black w-5 h-5"></i></div>
-                VAULT
+                <span class="text-[#76ff03]">VAULT</span> STUDIO
             </a>
             <div class="flex items-center gap-6">
-                <a href="index.html" class="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition">Store</a>
-                <button onclick="handleSignOut()" class="text-red-500 text-[10px] font-bold uppercase tracking-widest">Sign Out</button>
+                <a href="index.html" class="text-[10px] font-bold uppercase tracking-[3px] text-gray-400 hover:text-white transition">Store</a>
+                <button onclick="handleSignOut()" class="text-red-500 text-[10px] font-bold uppercase tracking-[3px]">Sign Out</button>
             </div>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-6">
-        <section class="flex flex-col md:flex-row items-center gap-8 mb-12 bg-zinc-900/30 p-10 rounded-[3rem] border border-white/5">
-            <img id="user-avatar" class="w-32 h-32 rounded-[2.5rem] border-2 border-[#76ff03]/20 p-1 bg-black" src="">
-            <div class="text-center md:text-left">
-                <h1 id="display-name" class="text-5xl font-black uppercase italic tracking-tighter mb-2">Cargando...</h1>
-                <p id="display-email" class="text-gray-500 italic mb-6 opacity-70"></p>
-                <div class="flex gap-3 justify-center md:justify-start">
-                    <button id="btn-dashboard" onclick="switchTab('dashboard')" class="active-tab px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest transition shadow-lg">Library</button>
-                    <button id="btn-dev-hub" onclick="switchTab('dev-hub')" class="bg-white/5 px-8 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 transition hover:bg-white/10">Dev Studio</button>
+        <section class="flex flex-col md:flex-row items-center gap-10 mb-16 bg-zinc-900/20 p-12 rounded-[3.5rem] border border-white/5">
+            <img id="user-avatar" class="w-32 h-32 rounded-[2.5rem] border-2 border-[#76ff03]/30 p-1 bg-black shadow-2xl shadow-[#76ff03]/5">
+            <div class="text-center md:text-left flex-grow">
+                <h1 id="display-name" class="text-5xl font-black uppercase italic tracking-tighter mb-2">Dev Console</h1>
+                <p id="display-email" class="text-gray-500 italic mb-8 opacity-60"></p>
+                <div class="flex gap-4 justify-center md:justify-start">
+                    <button id="btn-dashboard" onclick="switchTab('dashboard')" class="active-tab px-10 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">Library</button>
+                    <button id="btn-dev-hub" onclick="switchTab('dev-hub')" class="bg-white/5 px-10 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 transition hover:bg-white/10">Dev Studio</button>
                 </div>
             </div>
         </section>
 
         <div id="tab-dashboard" class="tab-content">
-            <h2 class="text-2xl font-black uppercase italic mb-8 flex items-center gap-3">
-                <span class="w-8 h-1 bg-[#76ff03]"></span> My Personal Library
-            </h2>
-            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-20">
-                <p class="text-gray-600 italic">No games owned yet.</p>
+            <h2 class="text-xl font-bold uppercase italic mb-8 opacity-50">Owned Software</h2>
+            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-20 text-center">
+                <p class="py-20 border-2 border-dashed border-white/5 rounded-[3rem] text-gray-600">No licenses found.</p>
             </div>
         </div>
 
         <div id="tab-dev-hub" class="tab-content hidden">
-            <section class="bg-zinc-900/80 border border-[#76ff03]/20 p-10 rounded-[3rem] mb-16 shadow-2xl shadow-[#76ff03]/5">
-                <div class="mb-10">
-                    <h2 class="text-3xl font-black uppercase italic">Deployment <span class="text-[#76ff03]">Console</span></h2>
-                    <p class="text-gray-500 text-sm italic">Upload your build and manage digital distribution.</p>
-                </div>
+            <section class="bg-zinc-900/60 border border-[#76ff03]/10 p-10 rounded-[3.5rem] mb-16">
+                <h2 class="text-3xl font-black uppercase italic mb-8 tracking-tighter">Initialize <span class="text-[#76ff03]">Deployment</span></h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="space-y-4">
-                        <input type="text" id="game-title" placeholder="Game Title" class="w-full p-4 rounded-2xl">
+                        <input type="text" id="game-title" placeholder="Software Title" class="w-full p-5 rounded-2xl">
                         <div class="grid grid-cols-2 gap-4">
-                            <input type="text" id="game-category" placeholder="Genre" class="w-full p-4 rounded-2xl">
-                            <input type="number" id="game-price" placeholder="Price (€)" class="w-full p-4 rounded-2xl">
+                            <input type="text" id="game-category" placeholder="Genre / Category" class="w-full p-5 rounded-2xl">
+                            <input type="number" id="game-price" placeholder="Price (€)" class="w-full p-5 rounded-2xl">
                         </div>
-                        <input type="text" id="game-img" placeholder="Cover Image URL (16:9)" class="w-full p-4 rounded-2xl">
+                        <input type="text" id="game-img" placeholder="Cover Art URL" class="w-full p-5 rounded-2xl">
                         
-                        <div class="bg-black/40 p-5 rounded-2xl border border-dashed border-white/10">
-                            <label class="text-[9px] font-black uppercase text-[#76ff03] tracking-[2px] block mb-3">Game Build (.zip, .exe, .rar)</label>
-                            <input type="file" id="game-file" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-[#76ff03] file:text-black hover:file:bg-white transition cursor-pointer">
+                        <div class="bg-black/50 p-6 rounded-2xl border border-dashed border-[#76ff03]/20">
+                            <label class="text-[9px] font-black uppercase text-[#76ff03] tracking-[3px] block mb-4">Master Build File (.zip, .exe)</label>
+                            <input type="file" id="game-file" class="text-xs text-gray-500 file:mr-4 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-[#76ff03] file:text-black hover:file:bg-white transition cursor-pointer">
                         </div>
                     </div>
 
-                    <textarea id="game-desc" placeholder="Explain your masterpiece..." class="w-full p-6 rounded-3xl h-full min-h-[200px] resize-none text-sm"></textarea>
+                    <textarea id="game-desc" placeholder="Product description and technical requirements..." class="w-full p-6 rounded-3xl h-full min-h-[220px] resize-none text-sm leading-relaxed"></textarea>
                     
-                    <button onclick="handlePublish()" id="publish-btn" class="md:col-span-2 bg-[#76ff03] text-black font-black p-6 rounded-2xl uppercase text-[11px] tracking-[5px] hover:scale-[1.01] transition-all shadow-xl shadow-[#76ff03]/20 flex justify-center items-center gap-2">
-                        <i data-lucide="upload-cloud" class="w-4 h-4"></i>
-                        Initialize Distribution
+                    <button onclick="handlePublish()" id="publish-btn" class="md:col-span-2 bg-[#76ff03] text-black font-black p-6 rounded-2xl uppercase text-[11px] tracking-[6px] hover:scale-[1.01] active:scale-95 transition-all shadow-2xl shadow-[#76ff03]/10 flex justify-center items-center gap-3">
+                        <i data-lucide="zap" class="w-4 h-4 fill-black"></i>
+                        Execute Global Release
                     </button>
                 </div>
             </section>
 
-            <h2 class="text-2xl font-black uppercase italic mb-8 flex items-center gap-3">
-                <span class="w-8 h-1 bg-[#76ff03]"></span> Studio Releases (<span id="count-releases">0</span>)
-            </h2>
-            <div id="my-published-games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20"></div>
+            <h2 class="text-2xl font-black uppercase italic mb-10 tracking-tighter">Verified Releases (<span id="count-releases" class="text-[#76ff03]">0</span>)</h2>
+            <div id="my-published-games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pb-32"></div>
         </div>
     </main>
 
