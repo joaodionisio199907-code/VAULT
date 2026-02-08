@@ -3,58 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAULT | My Studio</title>
+    <title>VAULT | My Profile & Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background-color: #050505; color: white; font-family: sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; }
         .tab-content.hidden { display: none; }
         .active-tab { background-color: #76ff03 !important; color: black !important; }
+        input, textarea { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        input:focus, textarea:focus { border-color: #76ff03 !important; outline: none; }
     </style>
 </head>
 <body class="pt-24">
 
-    <nav class="fixed top-0 w-full bg-black/80 backdrop-blur-md z-50 p-4 border-b border-white/5">
+    <nav class="fixed top-0 w-full bg-black/90 backdrop-blur-lg z-50 p-5 border-b border-white/5">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-black italic">VAULT</a>
-            <button onclick="handleSignOut()" class="text-red-500 text-xs font-bold uppercase">Salir</button>
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter">VAULT</a>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Store</a>
+                <button onclick="handleSignOut()" class="text-red-500 text-[10px] font-bold uppercase tracking-widest">Sign Out</button>
+            </div>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-6">
-        <section class="flex items-center gap-6 mb-12">
-            <img id="user-avatar" class="w-24 h-24 rounded-3xl border-2 border-[#76ff03]" src="">
-            <div>
-                <h1 id="display-name" class="text-4xl font-black uppercase italic">Cargando...</h1>
-                <p id="display-email" class="text-gray-500"></p>
+        <section class="flex flex-col md:flex-row items-center gap-8 mb-12">
+            <img id="user-avatar" class="w-32 h-32 rounded-[2.5rem] border-2 border-[#76ff03]/20 p-1 bg-zinc-900" src="">
+            <div class="text-center md:text-left">
+                <h1 id="display-name" class="text-5xl font-black uppercase italic tracking-tighter mb-2">Cargando...</h1>
+                <p id="display-email" class="text-gray-500 italic mb-6"></p>
+                <div class="flex gap-2 justify-center md:justify-start">
+                    <button id="btn-dashboard" onclick="switchTab('dashboard')" class="active-tab px-8 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition">Dashboard</button>
+                    <button id="btn-dev-hub" onclick="switchTab('dev-hub')" class="bg-white/5 px-8 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest border border-white/10 transition">Dev Studio</button>
+                </div>
             </div>
         </section>
 
-        <div class="flex gap-4 mb-8">
-            <button id="btn-dashboard" onclick="switchTab('dashboard')" class="active-tab px-6 py-2 rounded-xl font-bold uppercase text-xs">Biblioteca</button>
-            <button id="btn-dev-hub" onclick="switchTab('dev-hub')" class="bg-white/5 px-6 py-2 rounded-xl font-bold uppercase text-xs">Dev Studio</button>
-        </div>
-
         <div id="tab-dashboard" class="tab-content">
-            <h2 class="text-xl font-bold mb-4 italic text-[#76ff03]">Mis Compras</h2>
-            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <p class="text-gray-600">No tienes juegos comprados aún.</p>
+            <h2 class="text-2xl font-black uppercase italic mb-8 flex items-center gap-3">
+                <span class="w-8 h-1 bg-[#76ff03]"></span> My Library
+            </h2>
+            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-20">
+                <p class="text-gray-600 italic">No games in your personal library yet.</p>
             </div>
         </div>
 
         <div id="tab-dev-hub" class="tab-content hidden">
-            <div class="bg-white/5 p-8 rounded-[2rem] mb-12">
-                <h2 class="text-2xl font-black mb-6 italic">PUBLICAR NUEVO JUEGO</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="game-title" placeholder="Título" class="bg-black border border-white/10 p-4 rounded-xl">
-                    <input type="number" id="game-price" placeholder="Precio (€)" class="bg-black border border-white/10 p-4 rounded-xl">
-                    <input type="text" id="game-img" placeholder="URL de la Imagen" class="bg-black border border-white/10 p-4 rounded-xl md:col-span-2">
-                    <button onclick="handlePublish()" class="md:col-span-2 bg-[#76ff03] text-black font-black p-4 rounded-xl uppercase">Subir a la Vault</button>
+            <section class="bg-zinc-900/50 border border-white/5 p-10 rounded-[3rem] mb-16">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase italic">Publish to <span class="text-[#76ff03]">Vault</span></h2>
+                    <p class="text-gray-500 text-sm">Upload your latest creation to the global catalog.</p>
                 </div>
-            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <input type="text" id="game-title" placeholder="Game Title" class="w-full p-4 rounded-2xl">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="game-category" placeholder="Category" class="w-full p-4 rounded-2xl">
+                            <input type="number" id="game-price" placeholder="Price (€)" class="w-full p-4 rounded-2xl">
+                        </div>
+                        <input type="text" id="game-img" placeholder="Image URL (Direct link)" class="w-full p-4 rounded-2xl">
+                    </div>
+                    <textarea id="game-desc" placeholder="Game description..." class="w-full p-4 rounded-2xl h-full min-h-[150px] resize-none"></textarea>
+                    <button onclick="handlePublish()" class="md:col-span-2 bg-[#76ff03] text-black font-black p-5 rounded-2xl uppercase text-xs tracking-[4px] hover:scale-[1.01] transition shadow-xl shadow-[#76ff03]/10">
+                        Deploy Masterpiece
+                    </button>
+                </div>
+            </section>
 
-            <h2 class="text-xl font-bold mb-6 italic text-[#76ff03]">Mis Lanzamientos (<span id="count-releases">0</span>)</h2>
+            <h2 class="text-2xl font-black uppercase italic mb-8 flex items-center gap-3">
+                <span class="w-8 h-1 bg-[#76ff03]"></span> Studio Releases (<span id="count-releases">0</span>)
+            </h2>
             <div id="my-published-games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
                 </div>
         </div>
