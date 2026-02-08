@@ -3,7 +3,6 @@ const SUPABASE_URL = 'https://ettjrnpfgbcgwflmgcjv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_sIyzTHGZX1o4B39cjE7_Aw_WdZ2w5Px';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Variables globales para el usuario
 let currentUser = null;
 
 window.addEventListener("load", async () => {
@@ -13,26 +12,23 @@ window.addEventListener("load", async () => {
     const { data: { user }, error } = await _supabase.auth.getUser();
 
     if (!user) {
-        // Si no hay sesión, mandamos al index
         window.location.href = "index.html";
         return;
     }
 
     currentUser = user;
 
-    // 2. Actualizar Interfaz con datos del usuario
+    // 2. Actualizar Interfaz
     const username = user.email.split('@')[0].toUpperCase();
     document.getElementById('display-name').innerText = username;
     document.getElementById('display-email').innerText = user.email.toLowerCase();
-    
-    // Generar un avatar robótico basado en su nombre
     document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
 
-    // 3. Cargar los juegos que ha publicado este usuario
+    // 3. Cargar los juegos publicados en el Studio
     loadUserGames();
 });
 
-// GESTIÓN DE PESTAÑAS (Dashboard vs Dev Studio)
+// GESTIÓN DE PESTAÑAS
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
     document.querySelectorAll('.tab-btn').forEach(b => {
@@ -48,16 +44,15 @@ function switchTab(tabId) {
     lucide.createIcons();
 }
 
-// CARGAR JUEGOS DEL USUARIO
+// CARGAR JUEGOS PUBLICADOS POR EL USUARIO (En Dev Studio)
 async function loadUserGames() {
-    const grid = document.getElementById('my-games-grid');
+    const grid = document.getElementById('my-published-games-grid'); // Cambiado al nuevo ID
     const counter = document.getElementById('count-releases');
 
-    // Buscamos en la tabla games los que pertenecen al ID del usuario actual
     const { data: games, error } = await _supabase
         .from('games')
         .select('*')
-        .eq('user_id', currentUser.id) // Filtro por dueño
+        .eq('user_id', currentUser.id)
         .order('created_at', { ascending: false });
 
     if (error) {
@@ -66,7 +61,7 @@ async function loadUserGames() {
     }
 
     if (games && games.length > 0) {
-        grid.innerHTML = ''; // Limpiar el mensaje de "No games found"
+        grid.innerHTML = ''; 
         counter.innerText = games.length;
 
         games.forEach(game => {
@@ -91,60 +86,60 @@ async function loadUserGames() {
             </div>`;
         });
         lucide.createIcons();
+    } else {
+        grid.innerHTML = `
+            <div class="col-span-full py-20 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
+                <p class="text-gray-600 italic">You haven't published any games in your studio yet.</p>
+            </div>`;
+        counter.innerText = "0";
     }
 }
 
-// PUBLICAR JUEGO (Con subida de imagen real al Storage)
+// PUBLICAR JUEGO
 async function handlePublish() {
-    // Obtenemos los valores
     const title = document.getElementById('game-title').value;
     const category = document.getElementById('game-category').value;
     const price = document.getElementById('game-price').value;
     const description = document.getElementById('game-desc').value;
-    
-    // Aquí usamos el input de texto por ahora, pero si quieres usar archivos,
-    // asegúrate de que el input en tu HTML sea type="text" o type="file".
-    // Siguiendo tu HTML, es un input de texto para URL directa:
     const image_url = document.getElementById('game-img').value;
 
     if(!title || !price || !image_url) {
-        alert("⚠️ Completa los campos obligatorios: Título, Precio e Imagen.");
+        alert("⚠️ Completa los campos obligatorios.");
         return;
     }
 
-    // Insertar en la tabla 'games'
     const { data, error } = await _supabase.from('games').insert([
         { 
             title: title, 
             price: parseFloat(price), 
             category: category, 
             image_url: image_url, 
-            banner_url: image_url, // Usamos la misma para el banner
+            banner_url: image_url, 
             description: description, 
             status: 'verified',
-            user_id: currentUser.id // Guardamos quién lo subió
+            user_id: currentUser.id 
         }
     ]);
 
     if(error) {
-        alert("❌ Error al publicar: " + error.message);
+        alert("❌ Error: " + error.message);
     } else {
-        alert("🚀 ¡Juego publicado con éxito en la Vault!");
-        window.location.href = "index.html";
+        alert("🚀 ¡Juego enviado al Vault!");
+        loadUserGames(); // Recargar la lista sin salir de la página
+        // Limpiar campos
+        document.getElementById('game-title').value = '';
+        document.getElementById('game-price').value = '';
+        document.getElementById('game-img').value = '';
+        document.getElementById('game-desc').value = '';
     }
 }
 
 // BORRAR JUEGO
 async function deleteGame(gameId) {
-    if(!confirm("¿Estás seguro de que quieres eliminar este juego de la Vault?")) return;
-
-    const { error } = await _supabase
-        .from('games')
-        .delete()
-        .eq('id', gameId);
-
+    if(!confirm("¿Eliminar este juego definitivamente?")) return;
+    const { error } = await _supabase.from('games').delete().eq('id', gameId);
     if(error) alert("Error: " + error.message);
-    else location.reload();
+    else loadUserGames();
 }
 
 // CERRAR SESIÓN
