@@ -46,52 +46,31 @@ function switchTab(tabId) {
 
 // CARGAR JUEGOS PUBLICADOS POR EL USUARIO (En Dev Studio)
 async function loadUserGames() {
-    const grid = document.getElementById('my-published-games-grid'); // Cambiado al nuevo ID
+    const grid = document.getElementById('my-published-games-grid');
     const counter = document.getElementById('count-releases');
+
+    // DEBUG: Vamos a ver qué ID tiene el usuario logueado
+    console.log("Buscando juegos para el ID:", currentUser.id);
 
     const { data: games, error } = await _supabase
         .from('games')
         .select('*')
-        .eq('user_id', currentUser.id)
-        .order('created_at', { ascending: false });
+        .eq('user_id', currentUser.id); // Asegúrate que en Supabase la columna es 'user_id'
 
     if (error) {
-        console.error("Error cargando juegos:", error);
+        console.error("Error Supabase:", error.message);
         return;
     }
 
-    if (games && games.length > 0) {
-        grid.innerHTML = ''; 
-        counter.innerText = games.length;
+    // DEBUG: Ver qué devuelve la base de datos tras filtrar
+    console.log("Juegos devueltos por el filtro:", games);
 
-        games.forEach(game => {
-            grid.innerHTML += `
-            <div class="bg-[#0d0d0d] border border-white/5 rounded-[2.5rem] overflow-hidden group hover:border-[#76ff03]/40 transition-all duration-500">
-                <div class="h-40 overflow-hidden relative">
-                    <img src="${game.image_url}" class="w-full h-full object-cover opacity-50 group-hover:opacity-100 group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent"></div>
-                </div>
-                <div class="p-8 -mt-6 relative z-10">
-                    <h4 class="font-black uppercase italic text-lg tracking-tighter">${game.title}</h4>
-                    <p class="text-[9px] text-gray-500 uppercase font-bold tracking-[2px] mb-4">${game.category || 'Indie'}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-black text-white">${game.price}€</span>
-                        <div class="flex gap-2">
-                             <button onclick="deleteGame('${game.id}')" class="p-3 bg-white/5 rounded-xl hover:bg-red-500 transition-all text-red-500 hover:text-white">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                             </button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        });
-        lucide.createIcons();
+    if (games && games.length > 0) {
+        // ... (tu código de renderizado)
     } else {
-        grid.innerHTML = `
-            <div class="col-span-full py-20 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
-                <p class="text-gray-600 italic">You haven't published any games in your studio yet.</p>
-            </div>`;
-        counter.innerText = "0";
+        grid.innerHTML = `<div class="col-span-full py-20 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
+            <p class="text-gray-600 italic">No games found for your user ID.</p>
+        </div>`;
     }
 }
 
